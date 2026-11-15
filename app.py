@@ -70,7 +70,7 @@ with st.sidebar:
     unsafe_allow_html=True,
   )
   st.markdown(
-    "<div style='font-weight:600; font-size:0.92rem; margin:6px 0 2px 0; color:#E2E8F0;'>🌲 Student Profile</div>",  # noqa
+    "<div style='font-weight:600; font-size:0.92rem; margin:6px 0 2px 0; color:#E2E8F0;'>📚 Student Profile</div>",  # noqa
     unsafe_allow_html=True,
   )
   major = st.selectbox(
@@ -126,7 +126,7 @@ with st.sidebar:
         </div>
       </div>
       <div style="margin-top: 7px; font-size: 0.78rem; font-weight: 600; color: #FFD100; text-align: center; border-top: 1px solid rgba(255,209,0,0.35); padding-top: 5px; letter-spacing: 0.2px;">
-        🌲 Built for Slug DevFest '26 🍌
+        Built for UCSC DevFest '26 🍌
       </div>
     </div>
     """,  # noqa
@@ -344,21 +344,74 @@ with tab_graph:
       """
       var options = {
         "physics": {
-          "hierarchicalRepulsion": {"nodeDistance": 130},
-          "solver": "hierarchicalRepulsion"
+          "hierarchicalRepulsion": {"nodeDistance": 140},
+          "solver": "hierarchicalRepulsion",
+          "stabilization": {
+            "enabled": true,
+            "iterations": 500,
+            "fit": true
+          }
         },
         "layout": {
           "hierarchical": {
             "direction": "LR",
-            "sortMethod": "directed"
+            "sortMethod": "directed",
+            "levelSeparation": 150,
+            "parentCentralization": true
           }
+        },
+        "interaction": {
+          "dragNodes": true,
+          "dragView": true,
+          "zoomView": true,
+          "hover": true
         }
       }
       """
     )
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp:
-      net.save_graph(tmp.name)
+    raw_html = net.generate_html()
+    fit_script = """
+    <script type="text/javascript">
+      function fitAndCenter() {
+        if (typeof network !== 'undefined' && network !== null) {
+          network.fit({
+            animation: {
+              duration: 350,
+              easingFunction: 'easeInOutQuad'
+            }
+          });
+        }
+      }
+
+      window.addEventListener('load', function() {
+        setTimeout(fitAndCenter, 50);
+        setTimeout(fitAndCenter, 200);
+      });
+
+      if (typeof ResizeObserver !== 'undefined') {
+        var containerEl = document.getElementById('mynetwork') || document.body;
+        var ro = new ResizeObserver(function(entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (entries[i].contentRect.width > 50) {
+              setTimeout(fitAndCenter, 50);
+              setTimeout(fitAndCenter, 200);
+            }
+          }
+        });
+        ro.observe(containerEl);
+      }
+
+      window.addEventListener('resize', fitAndCenter);
+    </script>
+    </body>
+    """
+    custom_html = raw_html.replace("</body>", fit_script)
+    with tempfile.NamedTemporaryFile(
+      delete=False, suffix=".html", mode="w", encoding="utf-8"
+    ) as tmp:
+      tmp.write(custom_html)
+      tmp.flush()
       st.iframe(Path(tmp.name), height=540)
   else:
     st.info(f"{graph_course} has no prerequisite dependencies.")
