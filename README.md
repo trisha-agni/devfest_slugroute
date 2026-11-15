@@ -4,7 +4,6 @@
 [![Streamlit](https://img.shields.io/badge/frontend-Streamlit-FF4B4B.svg)](https://streamlit.io/)
 [![Google Gemini](https://img.shields.io/badge/AI-Google%20Gemini-4285F4.svg)](https://ai.google.dev/)
 [![NetworkX](https://img.shields.io/badge/graph-NetworkX-green.svg)](https://networkx.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **"SlugRoute is an AI academic advisor for UCSC students that turns complex prerequisite chains into interactive pathway graphs and personalized graduation roadmaps."**
 
