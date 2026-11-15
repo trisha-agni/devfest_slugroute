@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 import json
 import networkx as nx
+import re
 # internal imports
 from slugroute.config import GRAPH_FILE
 
@@ -35,6 +36,39 @@ class AcademicGraphEngine:
   def get_course_data(self, course_code: str) -> dict[str, Any] | None:
     code = self.resolve_code(course_code)
     return dict(self.G.nodes[code]) if code else None
+
+  def get_course_url(self, course_code: str) -> str | None:
+    data = self.get_course_data(course_code)
+    return data.get("url") if data else None
+
+  def linkify_courses(self, text: str) -> str:
+    """Converts catalog course codes into official clickable catalog links."""
+    if not text:
+      return text
+
+    # Split by fenced code blocks (``` ... ```) to avoid altering literal code
+    parts = re.split(r"(```[\s\S]*?```)", text)
+    pattern = re.compile(
+      r"(\[.*?\]\(.*?\)|\`([A-Z]{2,5}(?:\s+[A-Z]{2,4})?\s+\d+[A-Z]?)\`|"
+      r"\b([A-Z]{2,5}(?:\s+[A-Z]{2,4})?\s+\d+[A-Z]?)\b)"
+    )
+
+    def replacer(match: re.Match) -> str:
+      full = match.group(0)
+      if full.startswith("[") and "](" in full:
+        return full
+      code = match.group(2) or match.group(3)
+      url = self.get_course_url(code)
+      if url:
+        if match.group(2):
+          return f"[`{code}`]({url})"
+        return f"[{code}]({url})"
+      return full
+
+    for i in range(0, len(parts), 2):
+      parts[i] = pattern.sub(replacer, parts[i])
+
+    return "".join(parts)
 
   # ---------------------------------------------------------
   # Part 2: Prerequisite Validator (CNF Logic)

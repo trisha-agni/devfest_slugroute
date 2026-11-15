@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="slugYellow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE838"/>
+      <stop offset="60%" stop-color="#FFD100"/>
+      <stop offset="100%" stop-color="#E5A900"/>
+    </linearGradient>
+    <linearGradient id="mantleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF066"/>
+      <stop offset="100%" stop-color="#E6B800"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Foot / Slime Fringe Shadow -->
+  <path d="M 20 178 C 60 176, 120 180, 180 178 C 210 176, 230 168, 236 156 C 220 172, 160 184, 20 182 Z" 
+        fill="#C99700" opacity="0.6"/>
+
+  <!-- Main Banana Slug Body (Arched & shell-less) -->
+  <path d="M 18 178 
+           C 40 170, 75 152, 115 138 
+           C 150 126, 185 125, 215 134 
+           C 230 140, 242 150, 238 162 
+           C 234 172, 215 176, 180 176 
+           C 130 178, 60 180, 18 178 Z" 
+        fill="url(#slugYellow)" 
+        filter="url(#softShadow)"/>
+
+  <!-- Slug Mantle (Raised saddle behind the head) -->
+  <ellipse cx="168" cy="142" rx="36" ry="18" 
+           transform="rotate(-8 168 142)" 
+           fill="url(#mantleGrad)" 
+           stroke="#DDAA00" stroke-width="1.5"/>
+
+  <!-- Respiratory Pore (Pneumostome on right mantle) -->
+  <ellipse cx="178" cy="142" rx="4.5" ry="3.5" fill="#8C5C00" opacity="0.75"/>
+  <ellipse cx="178" cy="142" rx="3" ry="2" fill="#5A3A00"/>
+
+  <!-- Banana Slug Freckles / Spots (Ariolimax columbianus signature) -->
+  <circle cx="55" cy="172" r="3.2" fill="#6B4800" opacity="0.45"/>
+  <circle cx="82" cy="164" r="4" fill="#6B4800" opacity="0.45"/>
+  <circle cx="108" cy="156" r="3.5" fill="#6B4800" opacity="0.45"/>
+  <circle cx="132" cy="162" r="4.2" fill="#6B4800" opacity="0.45"/>
+  <circle cx="148" cy="136" r="2.8" fill="#6B4800" opacity="0.45"/>
+  <circle cx="188" cy="144" r="3.2" fill="#6B4800" opacity="0.45"/>
+  <circle cx="95" cy="150" r="2.5" fill="#6B4800" opacity="0.45"/>
+
+  <!-- Left Upper Eyestalk (Ommatophore) -->
+  <path d="M 215 136 C 215 118, 222 98, 226 84" 
+        fill="none" stroke="#FFD100" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="226" cy="82" r="6.5" fill="#FFE838"/>
+  <circle cx="228" cy="81" r="3.2" fill="#222222"/>
+  <circle cx="227" cy="80" r="1.2" fill="#FFFFFF"/>
+
+  <!-- Right Upper Eyestalk (Ommatophore) -->
+  <path d="M 224 140 C 230 124, 240 106, 248 94" 
+        fill="none" stroke="#FFD100" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="249" cy="92" r="6.5" fill="#FFE838"/>
+  <circle cx="251" cy="91" r="3.2" fill="#222222"/>
+  <circle cx="250" cy="90" r="1.2" fill="#FFFFFF"/>
+
+  <!-- Lower Sensory Feeler (Chemosensory tentacle) -->
+  <path d="M 233 158 C 239 161, 244 163, 246 163" 
+        fill="none" stroke="#FFD100" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Cheerful Mascot Smile -->
+  <path d="M 226 156 Q 232 163 236 157" 
+        fill="none" stroke="#7A5200" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Rosy Cheek -->
+  <ellipse cx="225" cy="153" rx="4" ry="2.5" fill="#FF8A80" opacity="0.5"/>
+</svg>

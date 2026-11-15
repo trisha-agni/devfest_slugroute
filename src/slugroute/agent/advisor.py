@@ -29,8 +29,11 @@ Key Rules:
    - Use `inspect_course` to verify details, descriptions, and credits.
    - Use `check_prerequisites` before declaring if a student can take a class.
    - Use `generate_roadmap` to build multi-quarter graduation pathways.
-2. Tone & Persona: Supportive, structured, and realistic about student workloads.
-3. Quarter Planning: When presenting schedules, state quarter numbers, total credits,
+2. Tool Efficiency: `search_courses` already provides credits, descriptions, and
+   prerequisites. Only inspect or check prerequisites for the top 2-3 most relevant
+   courses you intend to recommend, rather than every candidate course found.
+3. Tone & Persona: Supportive, structured, and realistic about student workloads.
+4. Quarter Planning: When presenting schedules, state quarter numbers, total credits,
    and remind students that 15–19 credits is a standard full-time load.
 """.strip()
 
@@ -63,6 +66,9 @@ class SlugAdvisor:
         system_instruction=SYSTEM_INSTRUCTION,
         tools=self.tools,
         temperature=0.2,
+        automatic_function_calling=types.AutomaticFunctionCallingConfig(
+          maximum_remote_calls=20,
+        ),
       ),
       history=history or [],
     )
@@ -114,7 +120,36 @@ class SlugAdvisor:
           self.reset(history=history)
 
         response = self._chat_session.send_message(user_message)
-        return response.text
+
+        # 1. Direct text return
+        if response.text and response.text.strip():
+          return response.text.strip()
+
+        # 2. If AFC stopped with open tool calls or empty text, request synthesis
+        if response.function_calls or not response.text:
+          followup = self._chat_session.send_message(
+            "Please summarize your recommendations and answer the question "
+            "based on the tool results gathered so far."
+          )
+          if followup.text and followup.text.strip():
+            return followup.text.strip()
+
+        # 3. Check for any raw text parts (e.g., from reasoning/thought parts)
+        if (
+          response.candidates
+          and response.candidates[0].content
+          and response.candidates[0].content.parts
+        ):
+          raw_texts = [
+            p.text
+            for p in response.candidates[0].content.parts
+            if getattr(p, "text", None) and p.text.strip()
+          ]
+          if raw_texts:
+            return "\n\n".join(raw_texts).strip()
+
+        print(f"⚠️ {model} returned empty response. Trying fallback...")
+        continue
       except Exception as e:
         err = str(e).upper()
         if "429" in err or "503" in err or "RESOURCE_EXHAUSTED" in err:

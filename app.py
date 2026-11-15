@@ -1,6 +1,7 @@
 # external imports
 from pathlib import Path
 from pyvis.network import Network
+import base64
 import networkx as nx
 import streamlit as st
 import tempfile
@@ -8,10 +9,38 @@ import tempfile
 from slugroute.agent.advisor import SlugAdvisor
 from slugroute.agent.tools import get_engine, get_retriever
 
+SLUG_ICON_PATH = Path(__file__).resolve().parent / "assets" / "banana_slug.png"
+SLUG_SVG_PATH = Path(__file__).resolve().parent / "assets" / "banana_slug.svg"
+
+# Base64 SVG for crisp inline rendering in banners and sidebar
+if SLUG_SVG_PATH.exists():
+  with open(SLUG_SVG_PATH, "r", encoding="utf-8") as f:
+    _svg_code = f.read()
+  SLUG_SVG_B64 = f"data:image/svg+xml;base64,{base64.b64encode(_svg_code.encode()).decode()}"  # noqa
+else:
+  SLUG_SVG_B64 = ""
+
 st.set_page_config(
   page_title="SlugRoute | UCSC AI Academic Advisor",
-  page_icon="🎓",
+  page_icon=str(SLUG_ICON_PATH) if SLUG_ICON_PATH.exists() else "🍌",
   layout="wide",
+)
+
+# Custom UCSC Banana Slug Gold & Navy Styling
+st.markdown(
+  """
+  <style>
+    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+      color: #ffd100 !important;
+      border-bottom-color: #ffd100 !important;
+    }
+    .stButton>button:hover {
+      border-color: #ffd100 !important;
+      color: #ffd100 !important;
+    }
+  </style>
+  """,
+  unsafe_allow_html=True,
 )
 
 
@@ -23,10 +52,27 @@ def load_core_systems():
 engine, retriever, advisor = load_core_systems()
 
 # ---------------------------------------------------------
-# Sidebar: Student Profile
+# Sidebar: Student Profile & Google Tech Credits
 # ---------------------------------------------------------
 with st.sidebar:
-  st.title("📚 Student Profile")
+  st.markdown(
+    f"""
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+      <img src="{SLUG_SVG_B64}" width="38" alt="Banana Slug" />
+      <div>
+        <h2 style="margin: 0; color: #ffd100; font-size: 1.35rem; line-height: 1.1;">
+          SlugRoute
+        </h2>
+        <span style="font-size: 0.74rem; color: #9ca3af;">UCSC Degree Navigator</span>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+  )
+  st.markdown(
+    "<div style='font-weight:600; font-size:0.92rem; margin:6px 0 2px 0; color:#E2E8F0;'>🌲 Student Profile</div>",  # noqa
+    unsafe_allow_html=True,
+  )
   major = st.selectbox(
     "Declared Major",
     options=["CS_BS", "BME_BS"],
@@ -52,11 +98,67 @@ with st.sidebar:
     step=1,
   )
 
-  st.divider()
   if st.button("🔄 Reset Advisor Session", use_container_width=True):
     advisor.reset()
     st.session_state.messages = []
     st.rerun()
+
+  # Powered by Google AI Technology Card (Compact & High-Contrast)
+  st.markdown(
+    """
+    <div style="background: #002244; border: 2px solid #FFD100; border-radius: 10px; padding: 10px 12px; margin-top: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+      <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 7px; border-bottom: 1px solid rgba(255, 209, 0, 0.35); padding-bottom: 4px;">
+        <span style="font-size: 1.05rem;">⚡</span>
+        <strong style="color: #FFD100; font-size: 0.90rem; letter-spacing: 0.3px;">Powered by Google AI</strong>
+      </div>
+      <div style="font-size: 0.79rem; color: #FFFFFF; line-height: 1.55;">
+        <div style="margin-bottom: 2px;">
+          <span style="color: #FFD100;">🔹</span> <strong style="color: #FFFFFF;">Gemini 3.5 Flash</strong> <span style="color: #CBD5E1; font-size: 0.73rem;">(Reasoning)</span>
+        </div>
+        <div style="margin-bottom: 2px;">
+          <span style="color: #FFD100;">🔹</span> <strong style="color: #FFFFFF;">Gemini 3.5 Flash Lite</strong> <span style="color: #CBD5E1; font-size: 0.73rem;">(Failover)</span>
+        </div>
+        <div style="margin-bottom: 2px;">
+          <span style="color: #FFD100;">🔹</span> <strong style="color: #FFFFFF;">Google GenAI SDK</strong> <span style="color: #CBD5E1; font-size: 0.73rem;">(Tool Calling)</span>
+        </div>
+        <div style="margin-bottom: 2px;">
+          <span style="color: #FFD100;">🔹</span> <strong style="color: #FFFFFF;">Google AI Studio</strong> <span style="color: #CBD5E1; font-size: 0.73rem;">(API Platform)</span>
+        </div>
+      </div>
+      <div style="margin-top: 7px; font-size: 0.78rem; font-weight: 600; color: #FFD100; text-align: center; border-top: 1px solid rgba(255,209,0,0.35); padding-top: 5px; letter-spacing: 0.2px;">
+        🌲 Built for Slug DevFest '26 🍌
+      </div>
+    </div>
+    """,  # noqa
+    unsafe_allow_html=True,
+  )
+
+# ---------------------------------------------------------
+# Main Header Banner (UCSC Banana Slug Theme)
+# ---------------------------------------------------------
+st.markdown(
+  f"""
+  <div style="background: linear-gradient(135deg, #003c6c 0%, #001f3f 100%); padding: 18px 24px; border-radius: 12px; border-left: 6px solid #ffd100; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <img src="{SLUG_SVG_B64}" width="60" alt="UCSC Banana Slug" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
+        <div>
+          <h1 style="color: #ffd100; margin: 0; font-size: 2rem; line-height: 1.1;">
+            SlugRoute
+          </h1>
+          <p style="color: #e5e7eb; margin: 4px 0 0 0; font-size: 0.95rem;">
+            UCSC Academic Advisor & Degree Pathfinder &bull; <em>Fiat Slug!</em>
+          </p>
+        </div>
+      </div>
+      <div style="background: rgba(255, 209, 0, 0.15); border: 1px solid #ffd100; border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; color: #ffd100; font-weight: 600;">
+        UC Santa Cruz 🌲
+      </div>
+    </div>
+  </div>
+  """,  # noqa
+  unsafe_allow_html=True,
+)
 
 # ---------------------------------------------------------
 # Main Interface Tabs
@@ -67,7 +169,7 @@ tab_advisor, tab_roadmap, tab_graph = st.tabs(
 
 # --- Tab 1: AI Advisor Chat ---
 with tab_advisor:
-  st.subheader("UCSC AI Academic Advisor")
+  st.subheader("🍌 UCSC AI Academic Advisor")
   st.caption("Grounded in authoritative catalog prerequisites and course data.")
 
   if "messages" not in st.session_state:
@@ -75,33 +177,59 @@ with tab_advisor:
       {
         "role": "assistant",
         "content": (
-          f"Hello! I am **SlugRoute**. I see you're in the **{major}** track "
+          f"Fiat Slug! 🍌 I am **SlugRoute**, your UCSC AI Academic Advisor. "
+          f"I see you're in the **{major}** track "
           f"with **{len(completed)}** courses completed. How can I help you plan?"
         ),
       }
     ]
 
-  for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-      st.markdown(msg["content"])
+  chat_container = st.container()
+
+  with chat_container:
+    for msg in st.session_state.messages:
+      avatar = (
+        str(SLUG_ICON_PATH)
+        if (msg["role"] == "assistant" and SLUG_ICON_PATH.exists())
+        else ("🍌" if msg["role"] == "assistant" else "🌲")
+      )
+      with st.chat_message(msg["role"], avatar=avatar):
+        content = (
+          engine.linkify_courses(msg["content"])
+          if msg["role"] == "assistant"
+          else msg["content"]
+        )
+        st.markdown(content)
 
   user_prompt = st.chat_input("Ask about prerequisites, roadmaps, or AI electives...")
   if user_prompt:
     st.session_state.messages.append({"role": "user", "content": user_prompt})
-    with st.chat_message("user"):
-      st.markdown(user_prompt)
+    with chat_container:
+      with st.chat_message("user", avatar="🌲"):
+        st.markdown(user_prompt)
 
-    with st.chat_message("assistant"):
-      with st.spinner("Analyzing degree graph and catalog..."):
-        # Contextualize prompt with current profile
-        context = (
-          f"[Student Profile: Major={major}, "
-          f"Completed={completed}, MaxCredits={max_credits}]\n"
-          f"Student Query: {user_prompt}"
-        )
-        reply = advisor.chat(context)
-        st.markdown(reply)
-        st.session_state.messages.append({"role": "assistant", "content": reply})
+      asst_avatar = (
+        str(SLUG_ICON_PATH) if SLUG_ICON_PATH.exists() else "🍌"
+      )
+      with st.chat_message("assistant", avatar=asst_avatar):
+        with st.spinner("Analyzing degree graph and catalog..."):
+          # Contextualize prompt with current profile
+          context = (
+            f"[Student Profile: Major={major}, "
+            f"Completed={completed}, MaxCredits={max_credits}]\n"
+            f"Student Query: {user_prompt}"
+          )
+          reply = advisor.chat(context)
+          if not reply:
+            reply = (
+              "I apologize, but I could not formulate a response. "
+              "Please try rephrasing your question."
+            )
+          reply_linked = engine.linkify_courses(reply)
+          st.markdown(reply_linked)
+          st.session_state.messages.append(
+            {"role": "assistant", "content": reply_linked}
+          )
 
 # --- Tab 2: Interactive Roadmap & What-If Simulator ---
 with tab_roadmap:
@@ -137,14 +265,24 @@ with tab_roadmap:
               data = retriever.get_course(c) or {}
               title = data.get("title", "")
               credits_num = data.get("credits", 5)
-              st.markdown(f"- **{c}** ({credits_num} cr)\n  *{title}*")
+              url = data.get("url") or engine.get_course_url(c)
+              if url:
+                st.markdown(
+                  f"- **[{c}]({url})** ({credits_num} cr)\n  *{title}*"
+                )
+              else:
+                st.markdown(f"- **{c}** ({credits_num} cr)\n  *{title}*")
   else:
     st.info("Select one or more target courses above to generate your roadmap.")
 
 # --- Tab 3: Prerequisite Knowledge Graph ---
 with tab_graph:
   st.subheader("Interactive Prerequisite Network")
-  st.caption("Visualizing prerequisite ancestor chains using NetworkX.")
+  st.caption(
+    "Visualizing prerequisite ancestor chains &bull; "
+    "🟡 **Target (Slug Gold)** | 🟢 **Completed (Green)** | "
+    "🔵 **Pending (UCSC Blue)**"
+  )
 
   graph_course = st.selectbox(
     "Select Course to Inspect Dependency Chain",
@@ -184,20 +322,20 @@ with tab_graph:
     )
 
     for n in sub_g.nodes():
-        if n == graph_course:
-            color = "#fdc700"  # 🍌 Target Course: UCSC Banana Slug Gold
-        elif n in completed:
-            color = "#10B981"  # Completed: Emerald Green
-        else:
-            color = "#003c6c"  # Pending prerequisite: UCSC Deep Blue
+      if n == graph_course:
+        color = "#FFD100"  # Target course: Banana Slug Gold
+      elif n in completed:
+        color = "#00CC96"  # Completed: Forest Green
+      else:
+        color = "#005596"  # Pending prerequisite: UCSC Navy Blue
 
-        net.add_node(
-            n,
-            label=n,
-            title=f"{n}: {sub_g.nodes[n].get('title', '')}",
-            color=color,
-            size=25 if n == graph_course else 18,
-        )
+      net.add_node(
+        n,
+        label=n,
+        title=f"{n}: {sub_g.nodes[n].get('title', '')}",
+        color=color,
+        size=25 if n == graph_course else 18,
+      )
 
     for u, v in sub_g.edges():
       net.add_edge(u, v, color="#555555")
