@@ -1,7 +1,7 @@
 # 🐌 SlugRoute | UCSC AI Academic Advisor
 
 > **Grounded, hallucination-free academic degree planning and prerequisite navigation for UC Santa Cruz students.**  
-> *Built with Google Gemini, NetworkX DAG Scheduling, SentenceTransformers RAG, and Streamlit for Slug DevFest '26.*
+> *Built with Google Gemini, NetworkX DAG Scheduling, SentenceTransformers RAG, and Streamlit for UCSC DevFest '26.*
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Google GenAI SDK](https://img.shields.io/badge/Google%20GenAI-3.3+-4285F4?logo=google&logoColor=white)](https://pypi.org/project/google-genai/)
@@ -60,7 +60,7 @@ flowchart TD
 
 ---
 
-## ✨ Key Features
+## ✅ Key Features
 
 ### 1. 💬 Grounded AI Academic Advisor
 * **Multi-Turn Chat**: Natural language advising contextualized with the student's declared major, completed courses, and quarterly credit limits.
@@ -225,5 +225,4 @@ uv run python data_pipeline/03_build_graph.py
 
 ## 🎓 About
 
-Created for **Slug DevFest 2026** at the **University of California, Santa Cruz (UCSC)**.  
-*Fiat Slug!* 🌲🍌
+Created for **DevFest 2026** at the **University of California, Santa Cruz (UCSC)**.
