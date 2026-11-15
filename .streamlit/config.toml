@@ -1,0 +1,12 @@
+[theme]
+# Controls active tabs, slider thumbs/fill, and accent highlights (turns red into UCSC Blue)
+primaryColor = "#003c6c"
+
+# Main background and text
+backgroundColor = "#FFFFFF"
+textColor = "#1E293B"
+
+# Sidebar and card background (subtle cool slate/navy tint)
+secondaryBackgroundColor = "#F4F7FB"
+
+font = "sans serif"

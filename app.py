@@ -26,7 +26,7 @@ engine, retriever, advisor = load_core_systems()
 # Sidebar: Student Profile
 # ---------------------------------------------------------
 with st.sidebar:
-  st.title("🌲 Student Profile")
+  st.title("📚 Student Profile")
   major = st.selectbox(
     "Declared Major",
     options=["CS_BS", "BME_BS"],
@@ -184,20 +184,20 @@ with tab_graph:
     )
 
     for n in sub_g.nodes():
-      if n == graph_course:
-        color = "#FF4B4B"  # Target course: Red
-      elif n in completed:
-        color = "#00CC96"  # Completed: Green
-      else:
-        color = "#636EFA"  # Pending prerequisite: Blue
+        if n == graph_course:
+            color = "#fdc700"  # 🍌 Target Course: UCSC Banana Slug Gold
+        elif n in completed:
+            color = "#10B981"  # Completed: Emerald Green
+        else:
+            color = "#003c6c"  # Pending prerequisite: UCSC Deep Blue
 
-      net.add_node(
-        n,
-        label=n,
-        title=f"{n}: {sub_g.nodes[n].get('title', '')}",
-        color=color,
-        size=25 if n == graph_course else 18,
-      )
+        net.add_node(
+            n,
+            label=n,
+            title=f"{n}: {sub_g.nodes[n].get('title', '')}",
+            color=color,
+            size=25 if n == graph_course else 18,
+        )
 
     for u, v in sub_g.edges():
       net.add_edge(u, v, color="#555555")
